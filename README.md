@@ -6,10 +6,9 @@ React 공식문서뿐만 아니라 공부에 도움이 되었던 자료를 정�
 
 ## React
 
-| Title | Description | Link |
-| :---: | :---------: | :--: |
-
-|Component vs PureComponet vs Functional Component| 컴포넌트에 대한 이해|<a href="https://usecode.pw/react-%EC%9D%B4%ED%95%B4-%EA%B8%B0%EC%B4%88-class-vs-pure-vs-function-component/" target="_blank">🌐</a> |
+|                       Title                       |     Description      |                                                                 Link                                                                 |
+| :-----------------------------------------------: | :------------------: | :----------------------------------------------------------------------------------------------------------------------------------: |
+| Component vs PureComponet vs Functional Component | 컴포넌트에 대한 이해 | <a href="https://usecode.pw/react-%EC%9D%B4%ED%95%B4-%EA%B8%B0%EC%B4%88-class-vs-pure-vs-function-component/" target="_blank">🌐</a> |
 
 ## useState
 
