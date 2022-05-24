@@ -1,6 +1,15 @@
 # react-docs
 
-리액트 공식 문서를 읽고 부숩니다. 모든 챕터는 위에서부터 아래로 순서대로 읽으면 더 쉽게 이해할 수 있습니다.
+React 공식 문서를 읽고 부숩니다.
+
+React 공식문서뿐만 아니라 공부에 도움이 되었던 자료를 정리합니다.
+
+## React
+
+| Title | Description | Link |
+| :---: | :---------: | :--: |
+
+|Component vs PureComponet vs Functional Component| 컴포넌트에 대한 이해|<a href="https://usecode.pw/react-%EC%9D%B4%ED%95%B4-%EA%B8%B0%EC%B4%88-class-vs-pure-vs-function-component/" target="_blank">🌐</a> |
 
 ## useState
 
