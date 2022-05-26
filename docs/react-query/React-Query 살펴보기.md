@@ -1,0 +1,313 @@
+# [React-Query 살펴보기](https://maxkim-j.github.io/posts/react-query-preview)
+
+React-Query는 React앱에서 비동기 로직을 쉽게 다루게 해주는 라이브러리입니다. Redux와 Saga를 이용해 비동기 관련 로직들을 관리하는 것과 꽤나 다른 관점에서 비동기 로직들을 바라보고, 유용한 기능을 많이 제공하고 있습니다.
+
+## 요약 + 느낌
+
+- 비동기 요청의 데이터 무결함에 대한 책임을 개발자가 아니라 React 앱 자체가 책임지게 하는 라이브러리
+- 비동기 요청의 무결함: 비동기 요청 데이터가 view에서 필요할 때, 그 전에 비동기 요청이 동작하여 데이터를 참조할 수 있는 상황을 만듦
+- 과정이 아닌 결과의 무결함: 대부분의 경우 요청, 요청 완결 직후 데이터 참조 혹은 예외 처리가 이루어졌던 비동기 요청의 관행?애서 벗어나 라이브러리가 알아서 캐싱, 리패칭을 해내면서 요청 시점이 데이터 참조 시점 직전이 아니더라도 view에서 데이터가 필요할 때 최신 데이터를 참조할 수 있음을 보장함
+- Context API: context를 사용해 비동기, server state를 관리하는 전역 계층을 제공해 비동기 요청을 관리
+- 작은 보일러 플레이트: saga에서처럼 비동기 관련한 성공, 실패 액션 하나하나를 선언하여 장황하게 정리할 필요가 없음. `useQuery`를 통해 만들어진 query는 고유한 key로 구분되어 여러개의 쿼리를 컴포넌트 곳곳에다 흩뿌려 놓아도 key만 같으면 동일한 쿼리와 데이터에 접근할 수 있음
+
+## React-Query가 주장하는 Global State 개념
+
+- Global State라는 말을 쓰지말자: 전역 state는 Client와 Server로 분류할 수 있고, 이 두 state는 다른 방식으로 다뤄져야 효율적인 앱을 만들 수 있다.
+- Server-State: 서버에서 가져오는 데이터들도 하나의 상태
+- Server-State와 Client-State의 구분
+  - Client-State: 세션간 지속적이지 않은 데이터, 동기적, 클라이언트가 소유, 항상 최신 데이터로 업데이트(렌더링에 반영)
+    - ex) 리액트 컴포넌트의 state, 동기적으로 저장되는 redux store의 데이터
+  - Server State: 세션간 지속되는 데이터, 비동기적, 세션을 진행하는 클라이언트만 소유하는게 아니고 공유되는 데이터도 존재하며 여러 클라이언트에 의해 수정될 수 있음, 클라이언트에서는 서버 데이터의 스냅샷만을 사용하기 때문에 클라이언트에서 보이는 서버 데이터는 항상 최신임을 보장할 수 없음.
+
+## 만들어진 동기
+
+- React 자체가 데이터를 패칭해오거나 업데이트하는 옵션을 제공하지 않기 때문에 React개발자들은 각자의 방식으로 http 통신 로직을 짜야했다.
+- Redux 같은 전역 상태관리 라이브러리들이 클라이언트 상태값에 대해서는 잘 작동하지만, 서버 상태에 대해서는 그렇게 잘 작동하지 않는다. Server State는 Client State와 완전히 다르기 때문이다.
+  - 서버 데이터는 항상 최신상태임을 보장하지 않는다. 명시적으로 fetching을 수행해야만 최신 데이터로 전환된다.
+  - 네트워크 통신은 최소한으로 줄이는게 좋은데, 복수의 컴포넌트에서 최신 데이터를 받아오기 위해 fetching을 여러번 수행하는 낭비가 발생할 수 있다.
+
+## 초기 세팅
+
+```sh
+yarn add react-query
+```
+
+- App.js에 Context Provider로 이하 컴포넌트를 감싸고 queryClient를 내려보내줌 ⇒ **이 context는 앱에서 비동기 요청을 알아서 처리하는 background 계층이 됨**
+
+```js
+import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
+
+const queryClient = new QueryClient()
+
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      {*/ ...Components */}
+    </QueryClientProvider>
+  )
+}
+```
+
+## Concept
+
+1. 중요한 기본 사항
+
+- Query들은 4개의 상태를 가지며, useQuery가 반환하는 객체의 프로퍼티로 어떤 상태인지 확인이 가능하다.
+
+  1. fresh: 새롭게 추가된 쿼리 인스턴스 -> active상태의 시작, 기본 staleTime이 0이기 때문에 아무것도 설정을 안해주면 호출이 끝나고 바로 stale 상태로 변한다. staleTime을 늘려줄 경우 fresh한 상태가 유지되는데, 이때는 쿼리가 다시 마운트되고 패칭이 발생하지 않고 기존의 fresh한 값을 반환한다.
+
+  2. fetching: 요청을 수행하는 중인 쿼리
+
+  3. stale: 인스턴스가 존재하지만 이미 패칭이 완료된 쿼리. 특정 쿼리가 stale된 상태에서 같은 쿼리 마운트를 시도한다면 캐싱된 데이터를 반환하면서 리패칭을 시도한다.
+
+  4. inactive: active 인스턴스가 하나도 없는 쿼리. inactive된 이후에도 cacheTime동안 캐시된 데이터가 유지된다. cacheTime이 지나면 GC된다.
+
+- 어떻게 inactive가 되는가?: pagenation관련한 예제를 보니, 페이지네이션을 할 때마다 컴포넌트가 재랜더링 되면서 새로운 쿼리가 만들어지고, 저번 랜더링에서 호출했던 쿼리들은 inactive가 된다. 렌더링간에 다시 호출되지 않고 언마운트되는 쿼리들은 inactive가 되는듯 보인다.
+- 다음 4가지 경우에 리패칭이 일어나지 않는다.
+  1. 런타임에 stale인 특정 쿼리 인스턴스가 다시 만들어졌을 때
+  2. window가 다시 포커스가 되었을 때(옵션으로 끄고 키는게 가능)
+  3. 네트워크가 다시 연결되었을 때(옵션으로 끄고 키는게 가능)
+  4. refetch interfval이 있을 때: 요청 실패한 쿼리는 디폴트로 3번더 백그라운드단에서 요청하며, retry, retryDelay 옵션으로 간격과 횟수를 커스텀 가능하다.
+
+2. Queries
+
+```js
+const { status, data, error, isFetching, isPreviousData } = useQuery(
+  ["projects", page],
+  () => fetchProjects(page),
+  { keepPreviousData: true, staleTime: 5000 }
+)
+
+// 예외처리 -> reject쓰지말고 무조건 throw Error
+const { error } = useQuery(["todos", todoId], async () => {
+  if (somethingGoesWrong) {
+    throw new Error("Oh no!")
+  }
+
+  return data
+})
+```
+
+- 쿼리는 server state를 요청하는 프로미스를 리턴하는 함수와 함께 unique key로 맵핑된다.
+- 쿼리는 콜백 함수의 요청이 프로미스를 리턴한다면 일단 잘 작동한다.
+- useQuery 훅의 인자로 2개가 들어감 (쿼리의 unique한 key, 프로미스를 리턴하는 함수(이 함수는 반드시 resolve Promise를 리턴하거나 에러를 throw해야한다.)
+- unique key: 한번 fresh되었다면 계속 추적이 가능하다. 리패칭, 캐싱, 공유등을 할 때 참조되는 값. 주로 배열을 사용하고 배열의 요소로 쿼리의 이름을 나타내는 문자열과 프로미스를 리턴하는 함수의 인자로 쓰이는 값을 넣는다.
+- useQuery 반환값: 객체,요청의 상태를 나타내는 몇가지 프로퍼티, 요청의 결과나 에러값을 갖는 프로퍼티도 포함함
+  - isLoading, isError, isSuccess, isIdle, status
+  - error,data,isFetching => 런타임간 무조건 요청이 한 번 이상 발생했다면 값이 존재한다.
+- 쿼리 요청 함수의 상태를 표현하는 status값은 4가지이다. status프로퍼티에서는 문자열로, 상태 이름앞에 is를 붙인 프로퍼티에서는 불리언으로 해당 상태인지 아닌지를 평가할 수 있다.
+  - idle: 쿼리 data가 하나도 없고 비어있을 떄, {enabled: false} 상태로 쿼리가 호출되었을 때 이 상태로 시작된다.
+  - loading: 말 그대로 로딩중일 때
+  - error: 말그대로 에러가 발생했을 때
+  - success: 말그대로 성공했을 때
+- 주요 쿼리 옵션
+  - enabled: 이걸 True로 설정하면 자동으로 쿼리의 요청함수가 호출되는 일이 없다.
+  - keepPreviousData: success와 loading사이 널뛰기 방지
+  - placeholderData : mock 데이터 설정도 가능. 얘는 근데 캐싱이 안됨
+  - initialData: 초기값 설정
+  - 쿼리에 여러가지 옵션 설정을 통해 입맛대로 데이터를 관리할 수 있다.
+
+3. Query Keys
+
+```js
+useQuery(['todo', 5, { preview: true }], ...)
+// queryKey === ['todo', 5, { preview: true }]
+```
+
+- 문자열: 구별되는 문자열로 키를 줄 수 있음. 얘는 바로 인자가 하나인 배열로 convert됨
+- 배열: 문자열과 함께 숫자를 주면 같은 문자열로 같은 key를 쓰면서도 id로 구별이 가능함
+- 콜백함수에 주는 인자: 배열의 마지막 요소이며, 역시 쿼리를 구별하는데 쓰임 => 엔드포인트가 같더라도 요청에 넣는 body나 쿼리 파람이 다르면 다른 쿼리 인스턴스로 취급한다.
+- 배열 요소의 순서도 중요. 내용은 모두 같아도 순서가 다르면 다르게 해싱된다고 함
+- 요청 함수가 특정 변수에 의존할 때, 쿼리 키 배열에 객체로 같이 넣어주면 요청 함수 내에서 인자로 객체를 받을 수 있고 그거 가지고 함수 안에서 뭔가 할 수도 있다.
+
+```js
+function Todos({ todoId }) {
+  const result = useQuery(["todos", todoId], () => fetchTodoById(todoId))
+}
+
+function Todos({ status, page }) {
+  const result = useQuery(["todos", { status, page }], fetchTodoList)
+}
+
+// 쿼리 요청 함수에서 queryKey에 접근할 수 있다
+function fetchTodoList({ queryKey }) {
+  const [_key, { status, page }] = queryKey
+  return new Promise()
+}
+```
+
+4. Parallel
+
+몇가지 상황을 제외하면 쿼리 여러개가 선언되어 있는 일반적인 상황이라면 쿼리 함수들은 그냥 병렬로 요청되서 처리된다. => 쿼리 처리의 동시성을 극대화 시킨다.
+
+```js
+function App () {
+   // 이렇게 주루륵 있을 때 걍 다 병렬로 처리된다 => 어떻게 구현한거지... redux batch update 같넹
+   const usersQuery = useQuery('users', fetchUsers)
+   const teamsQuery = useQuery('teams', fetchTeams)
+   const projectsQuery = useQuery('projects', fetchProjects)
+   ...
+ }
+```
+
+쿼리 여러개를 동시에 수행해야 하는데, 렌더링이 거듭되는 사이사이에 계속 쿼리가 수행되어야 한다면 쿼리를 수행하는 로직이 hook룰에 위배될 수도 있다. 그럴 때 쓰면 좋은게 useQueries
+
+```js
+function App({ users }) {
+  const userQueries = useQueries(
+    users.map((user) => {
+      return {
+        queryKey: ["user", user.id],
+        queryFn: () => fetchUserById(user.id),
+      }
+    })
+  )
+}
+```
+
+5. Query Retries
+
+```js
+import { useQuery } from "react-query"
+
+// 재호출 횟수를 옵션으로 커스텀해줄 수 있다.
+const result = useQuery(["todos", 1], fetchTodoListPage, {
+  retry: 10, // 에러를 display할 때까지 10번을 더 호출한다.
+})
+```
+
+- useQuery의 요청이 fail이 나는 경우, 최대 연속 요청 한계(the max number of consecutive retries)까지 요청을 다시한다. (디폴트는 3)
+- retry 옵션으로 쿼리의 재요청 횟수를 정한다.
+- retryDelay옵션을 설정하면 요청이 한번 실패했을 때, 설정한 일정 시간이 지난 후 또 요청을 한다.
+
+## 6. Mutations
+
+```js
+function App() {
+  const mutation = useMutation((newTodo) => axios.post("/todos", newTodo))
+
+  return (
+    <div>
+      {mutation.isLoading ? (
+        "Adding todo..."
+      ) : (
+        <>
+          {mutation.isError ? (
+            <div>An error occurred: {mutation.error.message}</div>
+          ) : null}
+
+          {mutation.isSuccess ? <div>Todo added!</div> : null}
+
+          <button
+            onClick={() => {
+              mutation.mutate({ id: new Date(), title: "Do Laundry" })
+            }}
+          >
+            Create Todo
+          </button>
+        </>
+      )}
+    </div>
+  )
+}
+```
+
+- useQuery와는 다르게 create,update, delete하며 server state에 사이드 이펙트를 일으키는 경우에 사용한다.
+- useMutation으로 mutation 객체를 정의하고, mutation 메서드를 사용하면 요청 함수를 호출해 요청이 보내진다. 이게 query랑 mutation이 나눠져있는 이유인 것 같다. => 이벤트 핸들러 함수, 혹은 조건부로 useQuery를 호출하면 최상위에서 호출해야한다는 훅의 규칙에 위배되기 때문에 성가시다.
+- useMutation이 반환하는 객체 프로퍼티로 제공되는 상태값은 useQuery와 동일하다.
+- mutation.reset: 현재의 error , data를 모두 지울 수 있음
+- 두번째 인자로 콜백 객체를 넘겨줘서 라이프사이클 인터셉트 로직을 짤 수도 있다.
+
+```js
+useMutation(addTodo, {
+  onMutate: (variables) => {
+    // 뮤테이션 시작
+    // onMutate가 리턴하는 객체는 이하 생명주기에서 context 파라미터로 참조가 가능하다.
+    return { id: 1 }
+  },
+  onError: (error, variables, context) => {
+    // 에러가 났음
+    console.log(`rolling back optimistic update with id ${context.id}`)
+  },
+  onSuccess: (data, variables, context) => {
+    // 성공
+  },
+  onSettled: (data, error, variables, context) => {
+    // 성공이든 에러든 어쨌든 끝났을 때
+  },
+})
+```
+
+- useQuery를 사용할 때 처럼 실패시 retry가 디폴트는 아니지만,retry 옵션을 줄 수는 있다.
+
+7. invalidation
+
+- 썩은(stale)쿼리의 폐기(invalidation)
+- 쿼리의 데이터가 요청을 통해 서버에서 바뀌었다면, 백그라운드에 남아있는 데이터는 과거의 것이 되어 앱에서 쓸모 없어지는 상황이 발생할 수 있다.
+- invalidateQueries 메소드를 사용하면 개발자가 명시적으로 query가 stale되는 지점을 찝어줄 수 있다. 해당 메소드가 호출되면 쿼리가 바로 stale되고, 리패치가 진행된다.
+- 쿼리에 특정 키가 공통적으로 들어가 있다면 싸잡아서 invalidation이 가능하다.
+
+```js
+// 캐시가 있는 모든 쿼리들을 invalidate한다.
+queryClient.invalidateQueries()
+
+// 'todos'로 시작하는 모든 쿼리들을 invalidate한다.
+queryClient.invalidateQueries("todos")
+
+queryClient.invalidateQueries({
+  predicate: (query) =>
+    query.queryKey[0] === "todos" && query.queryKey[1]?.version >= 10,
+})
+```
+
+- 당연한 이야기이지만, 뮤테이션이 성공한다면 높은 확률로 해당 데이터를 다시 패칭해와야한다. => mutation이 일어날 때 관련 query도 invalidate이 되어야함
+- 이럴 때는 아래처럼 mutation 생명주기 콜백안에서 invalidate 해주면 자연스럽다.
+
+```js
+import { useMutation, useQueryClient } from "react-query"
+
+const queryClient = useQueryClient()
+
+// 뮤테이션이 성공한다면, 쿼리의 데이터를 invalidate해 관련된 쿼리가 리패치되도록 만든다.
+const mutation = useMutation(addTodo, {
+  onSuccess: () => {
+    queryClient.invalidateQueries("todos")
+    queryClient.invalidateQueries("reminders")
+  },
+})
+```
+
+- 또한 mutation으로 요청 후 서버에서 받는 response값이 갱신된 새로운 데이터일 경우도 있다. 이럴때는 mutation을 성공했을 때 쿼리 데이터를 명시적으로 바꿔주는 queryClient인스턴스의 setQueryData 메서드를 사용하면 좋다.
+
+```js
+const queryClient = useQueryClient()
+
+const mutation = useMutation(editTodo, {
+  onSuccess: (data) => queryClient.setQueryData(["todo", { id: 5 }], data),
+})
+
+mutation.mutate({
+  id: 5,
+  name: "Do the laundry",
+})
+
+// 뮤테이션의 response 값으로 업데이트된 data를 사용할 수 있다.
+const { status, data, error } = useQuery(["todo", { id: 5 }], fetchTodoByID)
+```
+
+8. Caching Process
+
+- useQuery의 첫번째, 새로운 인스턴스 마운트 => 만약에 런타임간 최초로 fresh한 해당 쿼리가 호출되었다면, 캐싱하고 패칭이 끝나면 해당 쿼리를 stale로 바꿈
+- 앱 어딘가에서 useQuery 두번째 인스턴스 마운트 => 이미 쿼리가 stale이므로 접때 요청때 만들어놨었던 캐시를 반환하고 리패칭을 함. 이때 캐시도 업데이트
+- 쿼리가 언마운트 되거나 더이상 사용하지 않을 때 => 마지막 인스턴스가 언마운트되어 inactive 상태가 되었을 때 5분(cacheTime의 기본값)이 지나면 자동으로 삭제한다.
+
+## 좋아보이는 점
+
+- 비동기 관련한 타이핑이 정말 줄어든다.
+- Redux같은 전역 상태 저장소의 store에 동기적으로 업데이트되는 데이터와 액션만 남길 수 있어 크기를 줄이고,Saga는 아예 대채해버린다.
+- 캐싱과 리패칭을 개발자가 구현하지 않아도 알아서 지원한다.
+- 풍부한 옵션을 제공해 굉장히 많은 부분에서 custom이 가능하다.
+
+리액트 쿼리는 Redux 자체를 좀더 취지에 맞게 사용하게 해준다. 서버 상태와 클라이언트 상태의 특성이 다르니 다르게 관리되어야 한다는 React-Query의 주장에 동감하는 편이다. Redux Saga를 쓰며 비동기 로직을 관리하면서도 모든 비동기 요청으로 받아온 데이터를 전부 스토어에 저장해야하는지, 여러 컴포넌트에서 동시에 데이터가 필요한 경우에는 어떻게 하는지 고민이 될때가 많았다. 확실히 React Query를 살펴보고 나니, React Query가 이런 서버의 데이터를 좀 더 효율적으로 관리할 수 있는 방법 중 하나가 될 수 있을 것 같다.
+
+Redux는 전역 상태 관리를, React Query는 서버에서 받아온 데이터 관리를 하면서 역할을 분담하는 것이다. Docs에서는 이렇게 Redux에서 비동기 상태값과 관련된 로직들을 다 드러냈을 때, 동기적으로 업데이트되는 아주 적은 common client state 값만 남을 것이라고 이야기한다. 만약에 그 state값들이 굳이 Redux를 유지해야 하지 않을 정도로 적다면, 앱에서 Redux를 떼버리는 것을 고려할 수 있다고도 주장하는데 맞는 이야기 같다.

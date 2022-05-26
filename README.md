@@ -4,9 +4,9 @@ React 공식 문서서와 공부에 도움이 되었던 자료를 정리합니�
 
 ## React
 
-|                       Title                       |     Description      |                                                                 Link                                                                 |
-| :-----------------------------------------------: | :------------------: | :----------------------------------------------------------------------------------------------------------------------------------: |
-| Component vs PureComponet vs Functional Component | 컴포넌트에 대한 이해 | <a href="https://usecode.pw/react-%EC%9D%B4%ED%95%B4-%EA%B8%B0%EC%B4%88-class-vs-pure-vs-function-component/" target="_blank">🌐</a> |
+|                       Title                       |   Description    |                                                                 Link                                                                 |
+| :-----------------------------------------------: | :--------------: | :----------------------------------------------------------------------------------------------------------------------------------: |
+| Component vs PureComponet vs Functional Component | useCode님 블로그 | <a href="https://usecode.pw/react-%EC%9D%B4%ED%95%B4-%EA%B8%B0%EC%B4%88-class-vs-pure-vs-function-component/" target="_blank">🌐</a> |
 
 ## useState
 
@@ -22,3 +22,9 @@ useRef를 공부하면서 읽은 자료를 정리했습니다.
 |   Title   |   Description   |                                        Link                                        |
 | :-------: | :-------------: | :--------------------------------------------------------------------------------: |
 | Ref와 DOM | 리액트 공식문서 | <a href="https://ko.reactjs.org/docs/refs-and-the-dom.html" target="_blank">🌐</a> |
+
+## react-query
+
+|        Title         |   Description   |                                         Link                                          |
+| :------------------: | :-------------: | :-----------------------------------------------------------------------------------: |
+| React-Query 살펴보기 | maxkim님 블로그 | <a href="https://maxkim-j.github.io/posts/react-query-preview" target="_blank">🌐</a> |
