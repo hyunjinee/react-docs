@@ -4,9 +4,10 @@ React 공식 문서서와 공부에 도움이 되었던 자료를 정리합니�
 
 ## React
 
-|                       Title                       |   Description    |                                                                 Link                                                                 |
-| :-----------------------------------------------: | :--------------: | :----------------------------------------------------------------------------------------------------------------------------------: |
-| Component vs PureComponet vs Functional Component | useCode님 블로그 | <a href="https://usecode.pw/react-%EC%9D%B4%ED%95%B4-%EA%B8%B0%EC%B4%88-class-vs-pure-vs-function-component/" target="_blank">🌐</a> |
+|                       Title                       |   Description    |                                                                           Link                                                                           |
+| :-----------------------------------------------: | :--------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| Component vs PureComponet vs Functional Component | useCode님 블로그 |           <a href="https://usecode.pw/react-%EC%9D%B4%ED%95%B4-%EA%B8%B0%EC%B4%88-class-vs-pure-vs-function-component/" target="_blank">🌐</a>           |
+|            React 렌더링 이해 및 최적화            | 강민우님 블로그  | <a href="https://medium.com/vingle-tech-blog/react-%EB%A0%8C%EB%8D%94%EB%A7%81-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0-f255d6569849" target="_blank">🌐</a> |
 
 ## useState
 
