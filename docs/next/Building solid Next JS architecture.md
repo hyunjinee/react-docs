@@ -33,3 +33,21 @@ styled-components를 추가후 내가 따르는 아키텍처는 웹 페이지의
 이름 덕분에 인덱스 파일은 구성요소 HTML로 구성되고 스타일은 구성요소 CSS로 구성됩니다.
 
 LandingPage라는 폴더 안에 about section, contact section등과 같은 하위 페이지로 구성되어 있습니다.
+
+글쓴이는 라우팅단위별로 컴포넌트를 놓는 것을 선호한다고 한다.
+
+다음은 modules라는 폴더를 만들고 이 폴더에는 Login form , signup form ,checkout form, navbar, footer등의 재사용가능한 컴포넌트들을 만든다.
+
+다음으로 package라는 폴더에서는 재사용가능한 함수들이나 api 요청을 보낼 수 있는 함수들을 작성한다.이 폴더에는 hooks나 api 같은 폴더가 들어있다.
+
+![image](https://user-images.githubusercontent.com/63354527/170920644-cf9947e2-ea96-4b70-a19d-884e015a7d42.png)
+
+마지막으로 utils라는 폴더에서는 설정들이나 connection등을 넣는다.
+
+![image](https://user-images.githubusercontent.com/63354527/170920800-f967d6ff-02b5-441d-9571-0f089aac7510.png)
+
+## 결론
+
+아키텍처를 설계해야하는 것은 개발자의 몫이다. 명심해야할 것은 전체 코드 저장소의 아키텍처는 복잡한 비즈니스 로직 문제를 쉽게 해결할 수 있을 만큼 정확해야하며 미래에도 단일 저장소로 확장 가능해야한다.
+
+최고의 아키텍처는 이해하기 쉽고 근본적인 이념을 바꾸지 않고 복잡한 문제를 해결하는 아키텍처이다.
