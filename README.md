@@ -28,3 +28,9 @@ React 공식 문서서와 공부에 도움이 되었던 자료를 정리합니�
 | :------------------------------------: | :---------------: | :-------------------------------------------------------------------------------------------------: |
 | How and Why You Should Use React Query | Nathan Sebhastian | <a href="https://blog.bitsrc.io/how-to-start-using-react-query-4869e3d5680d" target="_blank">🌐</a> |
 |          React-Query 살펴보기          |  maxkim님 블로그  |        <a href="https://maxkim-j.github.io/posts/react-query-preview" target="_blank">🌐</a>        |
+
+## next.js
+
+|             Title              |   Description   |                                                                                    Link                                                                                     |
+| :----------------------------: | :-------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| Next.js 그거 어떻게 하는 건데. | 김우식님 블로그 | <a href="https://well-balanced.medium.com/next-js-%EA%B7%B8%EA%B1%B0-%EC%96%B4%EB%96%BB%EA%B2%8C-%ED%95%98%EB%8A%94-%EA%B1%B4%EB%8D%B0-ea5637f25fa4" target="_blank">🌐</a> |
