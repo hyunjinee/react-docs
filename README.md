@@ -12,6 +12,7 @@ React 공식 문서서와 공부에 도움이 되었던 자료를 정리합니�
 |         훅을 최상단에서 호출해야하는 이유         |           Shawn Reisner            |                                                              <a href="https://itnext.io/the-first-rule-of-react-hooks-in-plain-english-1e0d5ae32009" target="_blank">🌐</a>                                                               |
 |            React 렌더링 이해 및 최적화            |          강민우님 블로그           |                                         <a href="https://medium.com/vingle-tech-blog/react-%EB%A0%8C%EB%8D%94%EB%A7%81-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0-f255d6569849" target="_blank">🌐</a>                                          |
 |    React 서버 컴포넌트 RSC의 도입 배경과 장점     | 개발자 아저씨들 힘을 모아님 블로그 |                                                                                  <a href="https://programming119.tistory.com/252" target="_blank">🌐</a>                                                                                  |
+|              React Server Component               |              TOAST UI              |                                                                               <a href="https://ui.toast.com/weekly-pick/ko_20210119" target="_blank">🌐</a>                                                                               |
 
 ## useState
 
