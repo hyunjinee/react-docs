@@ -12,6 +12,7 @@ React 공식 문서서와 공부에 도움이 되었던 자료를 정리합니�
 |    React 서버 컴포넌트 RSC의 도입 배경과 장점     | 개발자 아저씨들 힘을 모아님 블로그 |                                                                                  <a href="https://programming119.tistory.com/252" target="_blank">🌐</a>                                                                                  |
 |              React Server Component               |              TOAST UI              |                                                                               <a href="https://ui.toast.com/weekly-pick/ko_20210119" target="_blank">🌐</a>                                                                               |
 |              React Server Components              |              내가 씀               |                                                                                     <a href="https://hyunjinee.tistory.com/97" target="_blank">🌐</a>                                                                                     |
+|        Incremental DOM과 Virtual DOM 비교         |              TOAST UI              |                                                                               <a href="https://ui.toast.com/weekly-pick/ko_20210819" target="_blank">🌐</a>                                                                               |
 
 ## hooks
 
