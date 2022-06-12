@@ -1,6 +1,6 @@
 # react-docs
 
-React 공식 문서서와 공부에 도움이 되었던 자료를 정리합니다.
+It is my journey to learn React.
 
 ## React
 
