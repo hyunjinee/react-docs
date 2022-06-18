@@ -14,6 +14,7 @@ It is my journey to learn React.
 |              React Server Component               |              TOAST UI              |                                                                               <a href="https://ui.toast.com/weekly-pick/ko_20210119" target="_blank">🌐</a>                                                                               |
 |              React Server Components              |              내가 씀               |                                                                                     <a href="https://hyunjinee.tistory.com/97" target="_blank">🌐</a>                                                                                     |
 |               Business Logic의 분리               |          이문기님 블로그           |                <a href="https://medium.com/@shinbaek89/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C-%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98-business-logic%EC%9D%98-%EB%B6%84%EB%A6%AC-adc10ae881ab" target="_blank">🌐</a>                 |
+|        React에서 선언적으로 비동기 다루기         |           JBEE님 블로그            |                                                                           <a href="https://jbee.io/react/error-declarative-handling-1/" target="_blank">🌐</a>                                                                            |
 
 ## hooks
 
