@@ -14,6 +14,8 @@ It is my journey to learn React.
 |              React Server Component               |              TOAST UI              |                                                                               <a href="https://ui.toast.com/weekly-pick/ko_20210119" target="_blank">🌐</a>                                                                               |
 |              React Server Components              |              내가 씀               |                                                                                     <a href="https://hyunjinee.tistory.com/97" target="_blank">🌐</a>                                                                                     |
 |               Business Logic의 분리               |          이문기님 블로그           |                <a href="https://medium.com/@shinbaek89/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C-%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98-business-logic%EC%9D%98-%EB%B6%84%EB%A6%AC-adc10ae881ab" target="_blank">🌐</a>                 |
+|         React Server Component 동작 방식          |              yceffort              |      <a href="https://yceffort.kr/2022/01/how-react-server-components-work#%EB%A6%AC%EC%95%A1%ED%8A%B8-%EC%84%9C%EB%B2%84-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80" target="_blank">🌐</a>      |
+|                  Error Boundary                   |          리액트 공식 문서          |                                                                  <a href="https://ko.reactjs.org/docs/error-boundaries.html#gatsby-focus-wrapper" target="_blank">🌐</a>                                                                  |
 
 ## hooks
 
