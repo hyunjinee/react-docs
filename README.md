@@ -4,8 +4,6 @@
 
 ## React
 
-## React-Tutorial
-
 - [hooks](https://github.com/hyunjinee/react-docs/tree/master/docs/react/hooks)
 - [useState](https://github.com/hyunjinee/react-docs/tree/master/docs/react/useState)
 - [useEffect](https://github.com/hyunjinee/react-docs/tree/master/docs/react/useEffect)
@@ -43,8 +41,7 @@
 |               Title                |            Description             |                                                                   Link                                                                    |
 | :--------------------------------: | :--------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------: |
 |     Hook의 동작 원리 이해하기      |           Inkyo님 블로그           |                                       <a href="https://ingg.dev/hook-work/" target="_blank">🌐</a>                                        |
-|        React Hooks 이해하기        |          곽태욱님 블로그           | <a href="https://velog.io/@gwak2837/React-Hooks%EC%9D%98-%EC%9D%B4%ED%95%B4#%EC%A3%BC%EC%9D%98%ED%95%A0-%EC%A0%90" target="_blank">🌐</a> |
-| 훅을 최상단에서 호출해야하는 이유  |           Shawn Reisner            |              <a href="https://itnext.io/the-first-rule-of-react-hooks-in-plain-english-1e0d5ae32009" target="_blank">🌐</a>               |
+
 | React의 useState는 어떤 모습일까?  |          김정환님 블로그           |                          <a href="https://leehwarang.github.io/2020/07/28/setState.html" target="_blank">🌐</a>                           |
 | React의 setState() 제대로 사용하기 |          이화랑님 블로그           |                          <a href="https://leehwarang.github.io/2020/07/28/setState.html" target="_blank">🌐</a>                           |
 |             Ref와 DOM              |          리액트 공식문서           |                            <a href="https://ko.reactjs.org/docs/refs-and-the-dom.html" target="_blank">🌐</a>                             |
