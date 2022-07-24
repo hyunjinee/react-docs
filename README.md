@@ -33,6 +33,7 @@ It is my journey to learn React.
 
 |                 Title                  |    Description    |                                                Link                                                 |
 | :------------------------------------: | :---------------: | :-------------------------------------------------------------------------------------------------: |
+|          react-query-tutorial          |    ssi02014님     |          <a href="https://github.com/ssi02014/react-query-tutorial" target="_blank">🌐</a>          |
 | How and Why You Should Use React Query | Nathan Sebhastian | <a href="https://blog.bitsrc.io/how-to-start-using-react-query-4869e3d5680d" target="_blank">🌐</a> |
 |          React-Query 살펴보기          |  maxkim님 블로그  |        <a href="https://maxkim-j.github.io/posts/react-query-preview" target="_blank">🌐</a>        |
 
