@@ -1,7 +1,5 @@
 # react-docs
 
-It is my journey to learn React.
-
 ## React
 
 |                       Title                       |            Description             |                                                                                                                   Link                                                                                                                    |
