@@ -8,13 +8,13 @@ _It is my journey to learn React._
 - [advanced]()
 
 - [hooks](https://github.com/hyunjinee/react-docs/tree/master/docs/react/hooks)
-  - [useState](https://github.com/hyunjinee/react-docs/tree/master/docs/react/useState)
-  - [useEffect](https://github.com/hyunjinee/react-docs/tree/master/docs/react/useEffect)
-  - [useRef](https://github.com/hyunjinee/react-docs/tree/master/docs/react/useRef)
-  - [useCallback](https://github.com/hyunjinee/react-docs/tree/master/docs/react/useCallback)
-  - [useMemo](https://github.com/hyunjinee/react-docs/tree/master/docs/react/useMemo)
-  - [useContext](https://github.com/hyunjinee/react-docs/tree/master/docs/react/useContext)
-  - [useReducer](https://github.com/hyunjinee/react-docs/tree/master/docs/react/useReducer)
+  - [useState](https://github.com/hyunjinee/react-docs/tree/master/docs/react/hooks/useState)
+  - [useEffect](https://github.com/hyunjinee/react-docs/tree/master/docs/react/hooks/useEffect)
+  - [useRef](https://github.com/hyunjinee/react-docs/tree/master/docs/react/hooks/useRef)
+  - [useCallback](https://github.com/hyunjinee/react-docs/tree/master/docs/react/hooks/useCallback)
+  - [useMemo](https://github.com/hyunjinee/react-docs/tree/master/docs/react/hooks/useMemo)
+  - [useContext](https://github.com/hyunjinee/react-docs/tree/master/docs/react/hooks/useContext)
+  - [useReducer](https://github.com/hyunjinee/react-docs/tree/master/docs/react/hooks/useReducer)
 
 ## React-Libraries
 
