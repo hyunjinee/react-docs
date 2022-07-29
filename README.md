@@ -4,7 +4,8 @@ _It is my journey to learn React._
 
 ## React
 
-- [basics]()
+- [basics](https://github.com/hyunjinee/react-docs/tree/master/docs/react/basics)
+  - [Main Concepts](https://github.com/hyunjinee/react-docs/tree/master/docs/react/basics/concepts)
 - [advanced]()
 
 - [hooks](https://github.com/hyunjinee/react-docs/tree/master/docs/react/hooks)
