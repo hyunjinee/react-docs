@@ -4,10 +4,8 @@ _It is my journey to learn React._
 
 ## React
 
-- [basics](https://github.com/hyunjinee/react-docs/tree/master/docs/react/basics)
-  - [Main Concepts](https://github.com/hyunjinee/react-docs/tree/master/docs/react/basics/concepts)
-- [advanced]()
-
+- [Main Concepts](https://github.com/hyunjinee/react-docs/tree/master/docs/react/concepts)
+- [virtualDOM]()
 - [hooks](https://github.com/hyunjinee/react-docs/tree/master/docs/react/hooks)
   - [useState](https://github.com/hyunjinee/react-docs/tree/master/docs/react/hooks/useState)
   - [useEffect](https://github.com/hyunjinee/react-docs/tree/master/docs/react/hooks/useEffect)
