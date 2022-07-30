@@ -4,7 +4,7 @@ _It is my journey to learn React._
 
 ## React
 
-- [Main Concepts](https://github.com/hyunjinee/react-docs/tree/master/docs/react/concepts)
+- [Main Concepts](https://github.com/hyunjinee/react-docs/tree/master/react/main-concepts)
 - [virtualDOM]()
 - [hooks](https://github.com/hyunjinee/react-docs/tree/master/docs/react/hooks)
   - [useState](https://github.com/hyunjinee/react-docs/tree/master/docs/react/hooks/useState)
