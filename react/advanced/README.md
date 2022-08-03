@@ -1,5 +1,5 @@
 # Advanced
 
-|                                                               Title                                                               |                               Review                                |  Date   |       Writer       |
-| :-------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------: | :-----: | :----------------: |
-| <a href="https://medium.com/dailyjs/applying-solid-principles-in-react-14905d9c5377" target="_blank">React SOLID 원칙 적용하기<a> | SOLID 원칙을 적용해서 컴포넌트를 어떻게 설계할지 고민해보게 되었다. | 22.7.13 | Konstantin Lebedev |
+- [Error Boundary]()
+- [Uncontrolled Components]()
+- [Higher Order Components]()

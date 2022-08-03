@@ -14,6 +14,10 @@ _It is my journey to learn React._
   - [useMemo](https://github.com/hyunjinee/react-docs/tree/master/docs/react/hooks/useMemo)
   - [useContext](https://github.com/hyunjinee/react-docs/tree/master/docs/react/hooks/useContext)
   - [useReducer](https://github.com/hyunjinee/react-docs/tree/master/docs/react/hooks/useReducer)
+- [Advanced]()
+  - [Error Boundary]()
+  - [Uncontrolled Components]()
+  - [High Order Components]()
 
 ## React-Libraries
 
