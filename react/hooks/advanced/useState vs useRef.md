@@ -1,7 +1,6 @@
 # useState vs useRef
 
 ![thumbnail](https://velog.velcdn.com/images/hyunjine/post/5c8cfeb8-5f0f-46aa-8cf2-87f00f89f1d1/image.png)
-
 React 프로젝트를 진행하면서 input의 값을 관리할 때 `useState로 관리할 것인가, useRef로 관리할 것인가`에 대해 팀원과 토론했습니다.
 
 이 글은 그 [토론](https://github.com/team-yaza/mozi-client/issues/78)에 기반합니다.
@@ -127,3 +126,45 @@ input을 state로 관리할 때 발생하는 리렌더링에 대한 부분에서
 결론은 `input에서 발생하는 사용자의 상호작용 또한 어플리케이션의 상태이므로 상태를 상태답게 관리하기 위해 useState를 사용해야한다.` 입니다.
 
 **여러분은 어떻게 생각하시나요?**
+
+> 22.08.03 추가
+
+## Controlled/Uncontrolled Components
+
+이 글에서 했던 고민이 공식문서에 나와있었습니다.
+
+우리의 고민은 이 컴포넌트가 `Controlled Component`인가 `Uncontrolled Component`인가에 대한 고민이었습니다.
+
+HTMLElement중에는 상태를 가지고 있는 것들이 있습니다.
+
+- input
+- select
+- textarea
+
+이 HTMLElement들의 상태를 누가 관리하느냐에 따라 `Controlled Component`와 `Uncontrolled Component`로 나뉩니다.
+
+엘리먼트를 가지고 있는 컴포넌트가 관리한다면, `Controlled Component`
+
+엘리먼트의 상태를 관리하지 않고 엘리먼트의 참조만 컴포넌트가 소유한다면, `Uncontrolled Component`입니다.
+
+즉, 쉽게 말하면 `useState`에 의해 상태로 관리하고 있는 컴포넌트를 `제어 컴포넌트`라고 하고, React가 상태로 추적하고 있지 않은 컴포넌트를 `비제어 컴포넌트`라고 합니다. `비제어 컴포넌트`같은 경우 ref를 활용해 실제 DOM에 접근합니다. `비제어 컴포넌트`는 DOM자체에서 데이터가 다뤄집니다.
+
+아래는 공식문서에서 인용한 문장입니다.
+
+> In a controlled component, form data is handled by a React component.
+> The alternative is uncontrolled components, where form data is handled by the DOM itself.
+
+> (번역)
+> **대부분 경우에 폼을 구현하는데 제어 컴포넌트를 사용하는 것이 좋습니다.**
+> 제어 컴포넌트에서 폼 데이터는 React 컴포넌트에서 다루어집니다.
+> 대안인 비제어 컴포넌트는 DOM 자체에서 폼 데이터가 다루어집니다.
+
+form의 input 상태같은 경우 React가 추적해서 그 값으로 어떤 행동을 할 여지가 있습니다. 예를들어서 로그인 유효성 검사 로직이 state가 변함에 따라 실행되어야하면 `제어 컴포넌트`를 활용할 수 있습니다.
+
+반면에, `비제어 컴포넌트`같은 경우는 실제 DOM을 참조해야하는 경우에 필요합니다. 가장 흔한 경우로 input에 focus를 하는 상황을 예로 들 수 있습니다.
+
+따라서, **실제 DOM에 접근해야하는 상황이 아니라면 React 컴포넌트가 input의 상태를 관리해야 합니다.(`제어 컴포넌트`)**
+
+## 더 읽을거리
+
+- [비제어 컴포넌트](https://en.reactjs.org/docs/uncontrolled-components.html)
