@@ -202,3 +202,339 @@ effect함수와 clean-up함수
 React 컴포넌트는 매 render 함수를 실행하는 과정에서 그 시점의 컴포넌트 props와 상태를 기반으로 컴포넌트 내부 변수와 함수를 다시 정의하고 계산한다. 이 때 useEffect의 첫 번째 인수도 계산되어 React 내부 스케줄러에 등록되고 나중에 위 그림에서 표현된 시점에 실행된다.
 
 위 그림과 같이 컴포넌트 상태가 A에서 B로 변경되면 A상태의 clean-up함수가 실행되고 B상태의 effect함수가 실행된다. 그리고 B상태의 clean-up함수는 내부 스케줄러에 의해 다음 effect함수를 실행하기 전에 실행된다. 이를 활용하면 setTimeout이나 setInterval의 콜백 함수 실행을 취소시킬 수도 있다.
+
+### 여러 컴포넌트에서의 실행순서
+
+useEffect의 effect함수나 clean-up함수는 기본적으로 해당 컴포넌트가 모두 화면에 그려진 후 실행된다.
+
+위 그림과 같이 A 컴포넌트를 루트 컴포넌트로 한 트리 구조에서 모든 컴포넌트에 useEffect의 effect함수와 clean-up 함수를 가지고 있다고 가정하자. 우선 모든 컴포넌트가 마운트 되는 순서는 다음과 같다.
+
+![image](https://user-images.githubusercontent.com/63354527/182984443-93896116-73ee-4da5-87ce-161079044dcf.png)
+
+위 그림과 같이 A 컴포넌트를 루트 컴포넌트로 한 트리 구조에서 모든 컴포넌트에 useEffect의 effect함수와 clean-up 함수를 가지고 있다고 가정하자. 우선 모든 컴포넌트가 마운트되는 순서는 아래와 같다.
+
+> D -> E -> B -> F -> G -> C -> A
+
+clean-up function 실행순서는 아래와 같다.
+
+> D -> E -> B -> F -> G -> C -> A
+
+왜냐하면 React 컴포넌트도 결국 함수이고 JSX 문법도 컴파일되면 \_jsx함수로 변경되기 때문이다. 그래서 먼저 호출된 함수가 먼저 스택에 쌓이고 마지막에 없어지듯이, 가장 먼저 호출된 A 컴포넌트가 가장 마지막에 마운트된다.
+
+> React 컴포넌트는 ReactDOM.render함수의 첫번째 인수로 주어진 컴포넌트부터 차례대로 렌더링되는데 보통 여기에 <App/> 컴포넌트가 위치한다.
+
+## useContext
+
+React Context는 Redux등과 비슷하게 여러 컴포넌트간 상태를 효율적으로 공유할 수 있는 API를 제공한다.
+
+![image](https://user-images.githubusercontent.com/63354527/182985492-79a7fd54-4fc3-4815-ae1c-9edcb7434fc2.png)
+
+일반적인 React에서 데이터는 위에서 아래로 props를 통해 전달되지만, 위 그림과 같이 App 컴포넌트에서 노란색 컴포넌트로 상태를 전달하고 싶은데 노란색 컴포넌트가 너무 깊이 있을 경우 props를 통해 중간 컴포넌트에 일일일 전달하는 과정이 번거로울 수 있다.
+
+![image](https://user-images.githubusercontent.com/63354527/182985613-cb15d166-a89c-4586-8cbf-7d3c6cdce252.png)
+
+이때 Context를 이용하면 각 컴포넌트에게 데이터를 명시적으로 props로 넘겨주지 않아도 컴포넌트끼리 데이터를 공유할 수 있다. Context는 Provider와 Consumer로 이루어지는데, MVC 패턴이나 Observer 패턴과 비슷하게 Provider의 값이 변경되면 Consumer가 이를 감지하고 자동으로 하위 컴포넌트에 변경사항을 반영해준다.
+
+React v16.3 이상에선 Context를 기본적으로 지원하기 때문에 따로 설치하지 않아도 된다. 그리고 함수 컴포넌트에선 Context Consumer로서 useContext를 사용할 수 있다.
+
+![image](https://user-images.githubusercontent.com/63354527/182985981-3db462cd-87e5-4216-9331-e5993ae5faf3.png)
+
+컴포넌트 트리 구조와 각 context provider의 범위가 위와 같다면 각 Context Provider의 위치는 아래와 같다.
+
+- Context A Provider는 A 컴포넌트를 감싸고 있다.
+- Context B Provider는 F 컴포넌트를 감싸고 있다.
+- Context C Provider는 Root 컴포넌트를 감싸고 있다.
+
+컴포넌트 별 각 Context에 접근할 수 있는 권한은 아래와 같다.
+
+- Root 컴포넌트는 Context C에만 접근할 수 있다.
+- A 컴포넌트는 Context A, C에 접근할 수 있다.
+- B 컴포넌트는 Context C에만 접근할 수 있다.
+- G 컴포넌트는 Context A, C에 접근할 수 있다.
+- J 컴포넌트는 Context C에만 접근할 수 있다.
+- K 컴포넌트는 Context B, C에 접근할 수 있다.
+
+![image](https://user-images.githubusercontent.com/63354527/182986060-f7232d6a-4bde-40ba-9fa8-31c6951d673d.png)
+
+### Context 생성
+
+```ts
+// src/UserContext.ts
+import { createContext } from "react"
+
+type User = Record<string, unknown>
+
+type UserContextValue = {
+  user: User
+  setUser: (user: User) => void
+}
+
+const UserContext = createContext<UserContextValue>(null)
+
+export default UserContext
+```
+
+createContext함수를 통해 사용자 정보와 그 정보를 변경할 수 있는 함수를 공유하는 React 컨텍스트를 생성한다. 이 Context는 user라는 변수와 setUser라는 함수를 가지고 있어서 use에 사용자 정보를 저장하고 setUser 함수로 하위 컴포넌트에서 user 정보를 변경할 수 있다.
+
+### Context 제공
+
+```ts
+// src/App.tsx
+import { useState } from "react"
+import UserContext from "./UserContext"
+
+function App() {
+  const [user, setUser] = useState(null)
+
+  return (
+    <UserContext.Provider value={{ user, setUser }}>
+      <ChildComponent />
+    </UserContext.Provider>
+  )
+}
+
+export default App
+```
+
+상태를 공유할 컴포넌트의 공통 조상 컴포넌트를 Context.Provider로 감싸면 Context.Provider의 모든 자식 컴포넌트는 value 값에 접근할 수 있게 된다. 그래서 Context를 사용하면 컴포넌트 트리가 깊을 때 한 컴포넌트가 다른 컴포넌트로 데이터를 전달하지 않아도 된다.
+
+Context Provider는 React 트리 아무곳에 배치할 수 있는데 Context Provier 밖에선 해당 Context에 접근할 수 없다는 점만 주의해서 위치를 정한다.
+
+### Context 접근
+
+```ts
+// src/ChildComponent.tsx
+import { useContext } from 'react'
+import UserContext from './UserContext'
+
+function ChildComponent() {
+  const userContext = useContext(UserContext)
+
+  return (
+    <div>
+      <button onClick={() => {
+          userContext.setUser({ name: '이름' })
+        }
+      />
+      <div>User name: {userContext.user.name}</div>
+    </div>
+  )
+}
+
+export default ChildComponent
+```
+
+Context Provider의 하위 컴포넌트라면 useContext hook을 통해 해당 Context 상태를 구독할 수 있다. useContext hook은 인수로 지정한 context의 value를 그대로 반환한다. Context Consumer 패턴으로도 context value에 접근할 수 있는데 일반적으로 useContext hook을 사용.
+
+만약 UserContext.Provider의 value가 변경되면 기존 value 값과 새로운 value 같에 대한 얕은 비교를 수행하고, 다르면 해당 context를 구독하는 모든 컴포넌트(+그의 자식 컴포넌트)의 render함수가 실행된 후 reconciliation이 일어난다.
+
+## useReducer
+
+useState와 역할은 비슷한데, useState가 제공하는 기능 이외에도 상태 업데이트 로직을 외부 함수로 분리할 수 있는 기능을 제공한다. 그래서 상태를 새롭게 업데이트하는 로직이 복잡할 때 상태 업데이트 로직을 컴포넌트 외부에 따로 정의할 수 있다.
+
+![image](https://user-images.githubusercontent.com/63354527/183007232-7269e48e-9617-48fb-a948-0fc6e2d0c00d.png)
+
+useState와 useReducer의 차이는 위 그림과 같다. 상태를 관리한다는 목적은 동일한데 상태를 업데이트 하는 방법이 약간 다르다. useReducer는 미리 정의된 reducer함수에 action과 이전 상태값을 입력값으로 넣어서 새로운 상태를 계산한다.
+
+```ts
+import { useReducer, useState } from 'react'
+
+function reducer(prevState, action) {
+  switch(action.type) {
+    case 'ADD':
+      return prevState + action.value
+    case 'MINUS':
+      return prevState - action.value
+    ...
+  }
+}
+
+function HookComponent() {
+  const [state1, setState] = useState(initialValue1)
+  const [state2, dispatch] = useReducer(reducer, initialValue2)
+
+  function handleClick() {
+    setState(prev => reducer(prev, { type: 'ADD', value: 1 }))
+    dispatch({ type: 'ADD', value: 1 })
+  }
+
+  ...
+}
+```
+
+## useRef
+
+useRef도 상태를 관리한다는 점에서 useState와 비슷하다. useRef는 객체의 레퍼런스를 반환하는데 해당 객체는 컴포넌트가 마운트되고 언마운트될 때까지 유지된다. useState와 비슷하게 초기값을 설정할 수도 있다.
+
+가장 큰 차이점은 useState는 반환되는 함수를 호출하면 render함수 실행후 reconcilidation이 일어나지만 useRef는 따로 상태 변경 함수가 없고 직접 .current의 상태를 변경하기 때문에 변경 사항이 자동으로 브라우저 화면에 반영되지 않는다는 점이다.
+
+하지만 컴포넌트 지역 변수와 다르게 useRef 상태는 컴포넌트가 언마운트될 때까지 유지되기 때문에, 여러 이유로 인해 해당 컴포넌트 render 함수가 실행되면 useRef 변경 사항이 화면에 반영될 수 있다. 이 현상은 아래 코드에서 확인할 수 있다.
+
+그래서 useRef는 주로 자동으로 화면을 렌더링하지 않아도 되는 상태를 관리할 때 사용한다. 화면 렌더링과 관련이 없는 상태를 useState로 관리하면 render 함수가 불필요하게 실행되기 때문이다. 예를 들면 주로 DOM 노드의 레퍼런스를 관리할 때 사용한다.
+
+useRef는 DOM 노드의 레퍼런스를 관리할 때도 사용되는데 만약 어떤 DOM 노드의 ref prop에 useRef 반환값을 넣어주면 React는 해당 값의 .current에 해당 DOM 노드의 레퍼런스를 넣어준다. 그리고 해당 DOM 노드가 변경될 때마다 React가 자동으로 .current을 업데이트해준다.
+
+```ts
+import { useRef } from "react"
+
+function ComponentWithReference() {
+  const elementRef = useRef<HTMLElement | null>(null)
+
+  return (
+    <div>
+      {/* input 노드가 변경될 때마다 elementRef.current가 자동으로 변경된다 */}
+      <input ref={elementRef} />
+    </div>
+  )
+}
+
+export default ComponentWithReference
+```
+
+## useCallback
+
+PureComponent(순수 컴포넌트)나 React.memo로 감싸진 컴포넌트는 props의 얕은 비교를 통해 렌더링 여부를 결정한다. 그리고 JavaScript는 함수 내용이 동일해도 생성된 시점이 다르면 다른 함수라고 판단한다. 만약 함수 컴포넌트에서 정의한 함수를 그대로 이런 컴포넌트의 props로 전달하면 매 컴포넌트 렌더링 시 해당 함수가 재정의되기 때문에 순수 컴포넌트 props의 얕은 비교가 무의미해질 수 있다.
+
+그래서 useCallback은 함수 컴포넌트의 props나 state가 변경됐을 때만 컴포넌트 내부에 정의된 함수를 재정의하기 위해 등장했다. 의존성 배열 원소를 얕게 비교했을 때 기존과 동일하면 useCallback은 기존에 정의된 함수를 반환한다.
+
+useCallback을 이용해 함수를 정의해야할 때는 아래와 같다.
+
+- React.memo로 감싸진 컴포넌트나 PureComponent에 props로 전달되는 함수
+- 다른 hook의 의존성 배열에 포함되는 함수
+
+이외의 경우에는 아래 표를 기준으로 사용할지 말지 경정.
+
+클래스 컴포넌트를 사용할 땐 메서드를 재정의한다는 개념이 없었는데 왜 함수 컴포넌트는 useCallback이라는 개념이 필요할까? 왜 함수 컴포넌트는 props나 state가 변경될 때마다 컴포넌트 내부에 정의된 함수를 매번 재정의하는 것일까?
+
+```ts
+import { Component } from 'react'
+
+class ClassComponent extends Component {
+  constructor(props) {
+    super(props)
+    this.state = { state1: 0 } // 상태 초기값 설정
+    this.handleClick = this.handleClick.bind(this) // 메소드 바인딩
+  }
+
+  handleClick() {
+    console.log(this.props.id) // props 접근
+    console.log(this.state.state1) // 상태 접근
+    this.setState(...) // 상태 업데이트
+    ...
+  }
+
+  render() {
+    return (
+      <button onClick={this.handleClick}>
+        클릭 버튼
+      </button>
+    );
+  }
+}
+
+```
+
+![image](https://user-images.githubusercontent.com/63354527/183008361-b176937a-d56d-4f4e-8840-909f2d37376d.png)
+
+위 그림과 같이 클래스 컴포넌트의 메소드는 this.state와 this.props를 통해 props와 state 값을 얻는다. 그래서 컴포넌트가 마운트된 후 props나 state가 변해도 handleClick 메소드를 재정의할 필요가 없다. 왜냐하면 컴포넌트가 마운트된 후 언마운트될 때까지this.state와 this.props는 항상 동일한 메모리 주소에 존재하기 때문이다.
+
+```js
+function FunctionComponent({ id }) {
+  const [state1, setState1] = useState(0) // 상태 초기값 설정
+  const [state2, setState2] = useState(0) // 상태 초기값 설정
+
+  const handleClick = useCallback(() => {
+    console.log(id) // props 접근
+    console.log(state1) // 상태 접근
+    console.log(state2) // 상태 접근
+    setState((prev) => prev + 1) // 상태 업데이트
+  }, [id, state1, state2])
+
+  return <button onClick={handleClick}>클릭 버튼</button>
+}
+```
+
+![image](https://user-images.githubusercontent.com/63354527/183008561-f5b882b6-299e-439c-97ef-352ecd0efea4.png)
+
+> 클래스 컴포넌트의 this.setState와 달리 함수형 컴포넌트에서 state를 갱신하는 것은 기존 상태와 병합하는 것이 아니라 기존 상태를 대체하는 것이다.
+
+함수 컴포넌트에서 사용되는 props와 useState의 state는 상태 관리의 편의를 위해 값또는 불변 객체로 관리된다. 그래서 함수 컴포넌트에선 상태를 변경하는 함수를 호출할 때마다 props와 state에 새로운 값또는 객체 레퍼런스가 할당된다.
+
+그래서 컴포넌트가 마운트된 후 1번과 같이 props나 state가 변하면 handleClick 함수를 재정의해야한다. 왜냐하면 함수 컴포넌트에서 props나 state가 계속 변화하는 값 또는 불변 객체를 가리키는 레퍼런스이기 떄문이다. 기존 정의된 함수엔 기존 상태의 주소가 저장되어있기 때문에 새로운 상태에 접근할 수 없다.
+
+만약 기존 값이 저장된 메모리 주소 100번과 200번의 값을 변경하면 기존 정의된 함수에서도 새로운 상태에 접근할 수 있다. React는 props와 state를 그렇게 관리하지 않기 때문에 새로운 함수를 재정의하는 것이다.
+
+우리는 의존성 배열(dependency array)을 통해 useCallback에게 함수를 재정의해야 하는 시점을 알려줄 수 있다.
+
+사실 클래스 컴포넌트도 render 함수 안에서 메소드를 bind해서 매 render 함수를 실행할 때마다 메소드를 재정의할 수 있다. 하지만 그럴 경우 매 렌더링 시마다 불필요하게 동일한 내용의 메소드를 재정의하기 때문에 React는 constructor 함수에서 메소드를 bind 하는 것을 권장하고 있다.
+
+## useMemo
+
+useMemo는 함수 컴포넌트 내부에서 동일한 입력일 때 동일한 결과값을 가지는 계산의 불필요한 실행을 방지하기 위해 등장했다.
+
+React는 특정 컴포넌트의 상태가 업데이트되거나 구독 중인 context의 value가 변경되면 해당 컴포넌트와 그의 모든 자식 컴포넌트의 render 함수를 실행하는데, 이때 컴포넌트 내부 변수도 다시 계산돼서 정의된다. 만약 변수 계산 과정이 상당히 오래 걸리는데 계산 결과는 동일하면 매 렌더링 시마다 굳이 다시 계산할 필요가 없을 것이다.
+
+그래서 이때 useMemo를 사용해서 동일한 의존성 배열 값을 가질 땐 계산을 건너뛰고 기존에 계산한 값을 재사용하면 좋다.
+
+위의 useCallback의 경우와 비슷하게, PureComponent나 React.memo로 감싸진 컴포넌트에 객체를 props로 전달할 땐 객체의 불변성을 보장하기 위해 useMemo를 사용해야 한다. useMemo를 사용하지 않고 그냥 전달하면 매 컴포넌트 렌더링 시 새로운 레퍼런스의 객체가 생성되기 때문에 순수 컴포넌트 props의 얕은 비교가 무의미해질 수 있다.
+
+useMemo는 기본적으로 바로 이전 값만 메모이제이션하기 때문에 여러 개의 이전 값을 메모이제이션할 필요가 있으면 직접 구현해야 한다.
+
+> useMemo나 useCallback를 사용하기 전엔 해당 값-함수가 컴포넌트 바깥에서 정의될 수 있는지 확인해야 한다. 변수 계산이나 함수 정의는 최대한 컴포넌트 바깥에서 해결하고, 컴포넌트 props나 state에 의존하는 값-함수일 때만 컴포넌트 내부에서 useMemo나 useCallback를 이용해 정의한다.
+
+useMemo를 이용해 값을 메모이제이션해야 할 때는 아래와 같다.
+
+- React.memo로 감싸진 컴포넌트나 PureComponent에 props로 전달되는 객체
+- 다른 hook의 의존성 배열에 포함되는 객체
+- 동일한 입력일 때 동일한 결과값을 가지는데 오래 걸리는 계산
+
+useMemo 사용시 의존성 배열의 얕은 비교 비용, 가독성 저하 가능성의 문제가 있다.
+
+## 메모이제이션
+
+동일한 입력을 줬을 때 동일한 결과값이 나오는데 굳이 결과값을 다시 계산해야 하는가? 그럴 필요가 없기 때문에 이런 경우에 값을 메모이제이션한다. 메모이제이션 개념은 기존의 사용한 값을 따로 저장한다는 점에서 캐싱과 비슷하다.
+
+## 순수함수
+
+useMemo는 의존성 배열의 항목을 얕게 비교해서 모두 동일하면 계산을 건너뛰고 이전에 계산된 결과값을 그대로 사용한다. 따라서 동일한 의존성 배열 항목을 줬을 때 동일한 결과값이 나온다는 것이 보장되어야 하기 때문에 값을 계산하는 함수는 부작용이 없는 순수 함수여야 한다.
+
+## 클로저
+
+```ts
+function createClosure(param) {
+  const privateVar = param
+  return (num) => privateVar + num
+}
+
+const closure = createClosure(5)
+closure(10) // 15
+
+const closure2 = createClosure(10)
+closure2(20) // 30
+```
+
+이전 계산 결과는 클로저 개념을 이용해서 함수 내부에 메모이제이션 할 수 있다. 위와 같이 클로저는 함수 내부에 private 변수를 가질 수 있는 함수라고 생각하면 된다. 그래서 이전 결과를 함수 내부에 저장할 수 있다.
+
+## useImperativeHandler
+
+상위 컴포넌트가 하위 컴포넌트 ref에 접근할 수 있는 기능을 제공.
+
+## useLayoutEffect
+
+useLayoutEffect는 useEffect의 원리와 사용방법이 동일하지만 함수가 실행되는 시점이 다르다.
+
+useEffect는 DOM 갱신과 화면 그리기가 모두 완료된 이후 실행되지만, useLayoutEffect는 DOM을 갱신하고 브라우저가 화면을 그리기 전에 동기적으로 실행된다.
+
+SSR에서 사용하면 경고가 뜰 것이다.
+
+1. HTML 파일을 파싱해서 HTML DOM 트리 생성
+2. CSS 파일을 파싱해서 CSSOM 트리 생성
+3. DOM과 CSSOM을 합쳐서 Render 트리 생성
+4. Render 트리 각 노드의 레이아웃 계산 (스케치)
+5. Render 트리 각 노드를 화면에 그리기 (색칠)
+
+브라우저가 화면을 렌더링하는 과정에서 useEffect는 5번 이후 실행되지만, useLayoutEffect는 4번과 5번 사이에서 동기적으로 실행된다.
+
+## useDebugValue
+
+사용자 지정(custom) Hook의 디버깅을 도와준다.
