@@ -19,6 +19,7 @@ _It is my journey to learn React._
   - [Error Boundary]()
   - [Uncontrolled Components]()
   - [High Order Components]()
+  - [Suspense](https://github.com/hyunjinee/react-docs/tree/master/react/suspense)
 
 ## React-Libraries
 
