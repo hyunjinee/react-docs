@@ -1,8 +1,6 @@
-# react-docs
+# React
 
 _It is my journey to learn React._
-
-## React
 
 - [Main Concepts](https://github.com/hyunjinee/react-docs/tree/master/react/main-concepts)
 - [virtualDOM](https://github.com/hyunjinee/react-docs/tree/master/react/virtualDOM)
