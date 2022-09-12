@@ -1,6 +1,7 @@
 # Basics
 
-|                                                        Title                                                        |                             Review                             |  Date   | Writer |
-| :-----------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------: | :-----: | :----: |
-|           <a href="https://velog.io/@hyunjine/Data-Flows-in-React" target="_blank">Data Flow in React<a>            |                 React에서 데이터의 흐름(Flux)                  | 22.8.22 | 이현진 |
-| <a href="https://velog.io/@surim014/react-rerender" target="_blank">React는 컴포넌트를 언제 다시 리렌더링할까요?<a> | React에서 렌더링에 대한 이해, 레퍼런스가 많아서 이해하기 쉽다. | 22.8.19 | surim  |
+|                                                                                  Title                                                                                  |                                                 Review                                                 |  Date   |    Writer    |
+| :---------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------: | :-----: | :----------: |
+|                                     <a href="https://velog.io/@hyunjine/Data-Flows-in-React" target="_blank">Data Flow in React<a>                                      |                                     React에서 데이터의 흐름(Flux)                                      | 22.8.22 |    이현진    |
+|                           <a href="https://velog.io/@surim014/react-rerender" target="_blank">React는 컴포넌트를 언제 다시 리렌더링할까요?<a>                           |                     React에서 렌더링에 대한 이해, 레퍼런스가 많아서 이해하기 쉽다.                     | 22.8.19 |    surim     |
+| <a href="https://immigration9.github.io/react,javascript/2020/07/26/javascript-to-know-for-react.html" target="_blank">React를 사용하기 위해 알아야 하는 JavaScript <a> | React에서 많이 사용되는 JavaScript 문법을 다룬다. 이미 잘 알고 있더라도 문법 리뷰를 할 수 있는 글이다. | 20.7.26 | immigration9 |
