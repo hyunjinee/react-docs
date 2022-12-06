@@ -1,7 +1,5 @@
 # React
 
-_It is my journey to learn React._
-
 - [Main Concepts](https://github.com/hyunjinee/react-docs/tree/master/react/main-concepts)
 - [virtualDOM](https://github.com/hyunjinee/react-docs/tree/master/react/virtualDOM)
 - [hooks](https://github.com/hyunjinee/react-docs/tree/master/docs/react/hooks)
