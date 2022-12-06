@@ -2,7 +2,7 @@
 
 - [Main Concepts](https://github.com/hyunjinee/react-docs/tree/master/react/main-concepts)
 - [virtualDOM](https://github.com/hyunjinee/react-docs/tree/master/react/virtualDOM)
-- [hooks](https://github.com/hyunjinee/react-docs/tree/master/docs/react/hooks)
+- [hooks](https://github.com/hyunjinee/react-docs/tree/master/react/hooks)
   - [useState](https://github.com/hyunjinee/react-docs/tree/master/react/hooks/useState)
   - [useEffect](https://github.com/hyunjinee/react-docs/tree/master/react/hooks/useEffect)
   - [useRef](https://github.com/hyunjinee/react-docs/tree/master/react/hooks/useRef)
