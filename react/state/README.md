@@ -1,0 +1,7 @@
+# State
+
+|                                                                                          Title                                                                                          |                                                 TL;DR                                                  |   Date   |       Writer       |
+| :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------: | :------: | :----------------: |
+| <a href="https://www.linkedin.com/pulse/understanding-state-management-front-end-paradigm-jitendrasinh-gohil/" target="_blank">Understanding State Management in Front-End Paradigm<a>  |                               프론트엔드에서 상태란 무엇인지 알아봅니다.                               | 23.01.20 | Jitendrasinh Gohil |
+| <a href="https://itnext.io/an-overview-of-react-state-management-techniques-in-2021-%EF%B8%8F-1590242b1cbc" target="_blank">An overview of React State Management Techniques in 2021<a> | Apollo, Recoil, Redux를 사용해서 상태를 관리했던 경험을 소개하고 필자가 느낀 장단점에 관한 내용입니다. | 21.06.07 |     Amo Moloko     |
+|                                           <a href="https://beta.reactjs.org/learn/state-as-a-snapshot" target="_blank">State as a Snapshot<a>                                           |                         React가 상태의 스냅샷을 어떻게 사용하는지 설명합니다.                          |          |     공식 문서      |
